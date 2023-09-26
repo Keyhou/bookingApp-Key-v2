@@ -1,20 +1,47 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/', function(req, res, next) {
-    res.json({ message: "Hello, get user!"});
+const { User } = require('../db.js');
+
+/* GET */
+router.get('/', async (req, res, next) => {
+  try {
+      const users = await User.findAll();
+      res.json({ users });
+  } catch (error) {
+      next(error);
+  }
 });
 
-router.post('/', function(req, res, next) {
-    res.json({ message: "Hello, post user!"});
+/* POST */
+router.post('/', async (req, res, next) => {
+  const user = await User.create({
+    role: "manager",
+    firstName: "Emilie",
+    lastName: "Bellarda",
+    email: "ebellarda@myrestaurant.com",
+    phoneNumber: "0897654345",
+    password: "lovepassword@"
+  });
+  res.json({ user });
+  
+})
+
+/* PUT */
+router.put('/', async function(req, res, next) {
+    const id = 1;
+    const user = await User.findByPk(is);
+    user.note = 'sunset view please';
+    await user.save();
+    res.json({ user });
 });
 
-router.put('/', function(req, res, next) {
-    res.json({ message: "Hello, put user!"});
-});
-
-router.delete('/', function(req, res, next) {
-    res.json({ message: "Hello, delete user!"});
+/* DELETE */
+router.delete('/', async function(req, res, next) {
+    const id = 2;
+    const user = await User.findByPk(is);
+    await user.destoy();
+    res.json({ user });
 });
 
 module.exports = router;

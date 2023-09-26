@@ -1,20 +1,55 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/', function(req, res, next) {
-    res.json({ message: "Hello, get spot!"});
+const { Spot } = require('../db.js');
+
+/* GET */
+router.get('/', async (req, res, next) => {
+  try {
+      const spots = await Spot.findAll();
+      res.json({ spots });
+  } catch (error) {
+      next(error);
+  }
 });
 
-router.post('/', function(req, res, next) {
-    res.json({ message: "Hello, post spot!"});
+/* POST */
+router.post('/', async (req, res, next) => {
+  const spot = await Spot.create({
+    name: 'hatsarany'
+  });
+  res.json({ spot });
 });
 
-router.put('/', function(req, res, next) {
-    res.json({ message: "Hello, put spot!"});
+/* PUT */
+router.put('/:id', async (req, res, next) => {
+  try {
+    const {id}  = req.params;
+    const {name} = req.body;
+
+    let spot = await Spot.findByPk(id);
+
+    if (!spot) {
+      return res.status(404).json({ error: `Spot with id:${id} not found` });
+    }
+
+    // Update the spot attribute
+    spot.name = name;
+    
+    await spot.save();
+
+    res.json({ message: "Spot updated successfully" });
+  } catch (error) {
+    next(error);
+  }
 });
 
-router.delete('/', function(req, res, next) {
-    res.json({ message: "Hello, delete spot!"});
+/* DELETE */
+router.delete('/', async function(req, res, next) {
+    const id = 2;
+    const spot = await Spot.findByPk(is);
+    await spot.destoy();
+    res.json({ spot });
 });
 
 module.exports = router;

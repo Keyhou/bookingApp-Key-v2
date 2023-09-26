@@ -6,11 +6,6 @@ const roomRouter = require('./room');
 const spotRouter = require('./spot');
 const userRouter = require('./user');
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.json('Hello World');
-});
-
 router.use('/reservation', reservationRouter);
 router.use('/room', roomRouter);
 router.use('/spot', spotRouter);
