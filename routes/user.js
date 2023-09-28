@@ -16,12 +16,12 @@ router.get('/', async (req, res, next) => {
 /* POST */
 router.post('/', async (req, res, next) => {
   const user = await User.create({
-    role: "manager",
-    firstName: "Emilie",
-    lastName: "Bellarda",
-    email: "ebellarda@myrestaurant.com",
-    phoneNumber: "0897654345",
-    password: "lovepassword@"
+    role: "client",
+    firstName: "Key",
+    lastName: "Mtz",
+    email: "key@key.key",
+    phoneNumber: "0612345678",
+    password: "iphone15"
   });
   res.json({ user });
   
