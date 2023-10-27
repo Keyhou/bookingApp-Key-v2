@@ -31,7 +31,7 @@ router.post('/signin', async (req, res) => {
       email: req.body.email,
     },
   });
-    if (!user) return res.status(400).json({message: `Incorrect mail or password`});
+    if (!user) return res.status(400).json({message: `Incorrect mail or password`, status: 400});
     const validPassword = await bcrypt.compare(req.body.password, user.password);
     if (!validPassword) return res.status(400).json({message: `Incorrect mail or password`});
     const payload = {
@@ -39,7 +39,9 @@ router.post('/signin', async (req, res) => {
     password: req.body.password
   };
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' });
+  res.status(201).json({ jwt: token});
   res.json({message: token});
 });
 
 module.exports = router;
+

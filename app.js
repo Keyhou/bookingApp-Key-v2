@@ -4,6 +4,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const jwt = require('jsonwebtoken');
+const cors = require('cors');
 
 // Routes
 const indexRouter = require('./routes/index');
@@ -18,6 +19,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+//app.use(cors({ origin: 'http://localhost:3001' }));
+// access to all ports with *
+app.use(cors({ origin: '*' }));
 
 const verifyJWT = (req, res, next) => {
     const  SECRET_KEY = "secretkey23456"; // A remplacer par la même clé secrète que dans la route signin
@@ -35,6 +39,7 @@ const verifyJWT = (req, res, next) => {
       res.status(400).json({ auth: false, message: 'Invalid token.' });
     }
   };
+
 
 // Routes implementation
 app.use('/api', verifyJWT, indexRouter);
