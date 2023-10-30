@@ -16,21 +16,21 @@ NodeJS CRUD restaurant reservation app again
 - Express
 - JsonWebToken
 
-## Resources and technological monitoring 🔍
+## 🔍 Resources and technological monitoring 
 - [Sequelize](https://sequelize.org/docs/v6/getting-started/)
 - [ExpressJS](https://expressjs.com)
 - [Fastify](https://fastify.dev)
 - [GrafikArt](https://grafikart.fr/formations/formation-javascript)
 
-## Summary of the problems encountered and solutions envisaged 🔐
+## 🔐 Summary of the problems encountered and solutions envisaged 
 - Setting up error messages at each step to locate problems
 - For this project deliverable, I focused on the reservation part while taking in consideration authentification and JWT for both Postman & the Front in REACT on bookingAppFront-Key repository.
 
-## Database Schema 🗺️
+## 🗺️ Database Schema 
 We agreed to all use the other team's database schema to make the course easier
 ![Database Schema Booking restaurant](https://github.com/Keyhou/bookingApp-Key-v2/assets/31210145/f0e99c28-37fe-42d9-9404-e9aa70205a07)
 
-## Postman screenshots 🔗
+## 🔗 Postman screenshots 
 - Reservation GET
 ![Reservation GET](https://github.com/Keyhou/bookingApp-Key-v2/assets/31210145/633d3c40-2cf8-41cf-953b-e1fca0f0d6f2)
 
