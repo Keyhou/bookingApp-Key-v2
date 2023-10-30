@@ -3,7 +3,7 @@ const router = express.Router();
 
 const { Room } = require('../db.js');
 
-/* GET */
+/* GET all */
 router.get('/', async (req, res, next) => {
   try {
       const rooms = await Room.findAll();
