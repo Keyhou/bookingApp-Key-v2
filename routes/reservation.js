@@ -1,10 +1,11 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
-const { Reservation } = require('../db.js');
+const { Reservation } = require("../db.js"); // Import User, Spot, and Room models
+const { isAdmin } = require("./isAdmin.js");
 
-/* GET all */
-router.get('/', async (req, res, next) => {
+/* GET all reservations */
+router.get("/", async (req, res, next) => {
   try {
     const reservations = await Reservation.findAll();
     res.json({ reservations });
@@ -13,18 +14,12 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-/* POST */
+/* POST: Create a reservation */
 router.post("/", async (req, res, next) => {
   try {
-    const {
-      date,
-      name,
-      note,
-      status,
-      userId,
-      spotId,
-      roomId } = req.params.body;
+    const { date, name, note, status, userId, spotId, roomId } = req.body; // Use req.body to access request data, not req.params.body
 
+    // Check if the spot is already reserved for the given date and time
     const existingReservation = await Reservation.findOne({
       where: {
         spotId,
@@ -38,6 +33,7 @@ router.post("/", async (req, res, next) => {
         .json({ error: "Spot is already reserved for this date and time." });
     }
 
+    // Create the reservation
     const reservation = await Reservation.create({
       date,
       name,
@@ -58,37 +54,19 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-// router.post('/', async (req, res, next) => {
-//   const reservation = await Reservation.create({
-//     date: Date.now(),
-//     name: 'Key',
-//     note: 'Terrace',
-//     status: 1,
-//     userId: 1,
-//     spotId: 1,
-//     roomId: 1
-//   });
-//   res.json({ reservation });
-// });
-
-// PUT: update a reservation
-router.put('/:id', async (req, res, next) => {
+/* PUT: Update a reservation */
+router.put("/:id", async (req, res, next) => {
   try {
-    const {id}= req.params;
-    const {
-      date,
-      name,
-      note,
-      status,
-      userId,
-      spotId,
-      roomId
-    } = req.body;
+    const { id } = req.params;
+    const { date, name, note, status, userId, spotId, roomId } = req.body;
 
+    // Find the reservation by ID
     let reservation = await Reservation.findByPk(id);
 
     if (!reservation) {
-      return res.status(404).json({ error: `Reservation with id:${id} not found` });
+      return res
+        .status(404)
+        .json({ error: `Reservation with id:${id} not found` });
     }
 
     // Update the reservation attributes
@@ -100,35 +78,37 @@ router.put('/:id', async (req, res, next) => {
     reservation.spotId = spotId;
     reservation.roomId = roomId;
 
+    // Save the updated reservation
     await reservation.save();
 
-    res.json({ message: 'Reservation updated successfully' });
+    res.json({ message: "Reservation updated successfully" });
   } catch (error) {
     next(error);
   }
 });
 
-/* DELETE */
-router.delete("/:reservationId", (req, res, next) => {
+/* DELETE: Delete a reservation */
+router.delete("/:reservationId", async (req, res, next) => {
   const reservationId = req.params.reservationId;
 
-  Reservation.destroy({
-    where: { id: reservationId },
-  })
-    .then((rowsDeleted) => {
-      if (rowsDeleted === 0) {
-        return res.status(404).json({ message: "Reservation not found." });
-      }
-      res.status(200).json({ message: "Reservation deleted." });
-    })
-    .catch((error) => {
-      console.error(error);
-      res
-        .status(500)
-        .json({ error: "An error occurred while deleting the reservation." });
+  // Delete the reservation by ID
+  try {
+    const rowsDeleted = await Reservation.destroy({
+      where: { id: reservationId },
     });
+
+    if (rowsDeleted === 0) {
+      return res.status(404).json({ message: "Reservation not found." });
+    }
+
+    res.status(200).json({ message: "Reservation deleted." });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while deleting the reservation." });
+    next(error);
+  }
 });
-
-
 
 module.exports = router;
