@@ -1,27 +1,32 @@
+// require('dotenv').config();
+
 // Modules
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
-const logger = require("morgan");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
+const morganMiddleware = require("./middlewares/morgan.middleware");
+const logger = require("./utils/logger");
 
 // Routes
-const indexRouter = require("./routes/index");
-const authRouter = require("./routes/auth");
+const indexRouter = require("./routes/indexRoute");
+const authRouter = require("./routes/authRoute");
 
 // App implementation
 const app = express();
 
 // Middleware
-app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 //app.use(cors({ origin: 'http://localhost:3001' }));
 // access to all ports with *
-app.use(cors({ origin: "*" }));
+app.use(cors({ origin: "*", optionsSuccessStatus: 200 }));
+app.use(morganMiddleware);
+
+logger.http("Debut Session")
 
 const verifyJWT = (req, res, next) => {
   const SECRET_KEY = "secretkey23456"; // A remplacer par la même clé secrète que dans la route signin
@@ -42,8 +47,8 @@ const verifyJWT = (req, res, next) => {
 };
 
 // Routes implementation
-app.use("/api", verifyJWT, indexRouter);
 app.use("/auth", authRouter);
+app.use("/api", verifyJWT, indexRouter);
 
 // Exporte app
 module.exports = app;

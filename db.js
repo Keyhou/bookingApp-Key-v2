@@ -1,7 +1,7 @@
 const { Sequelize, DataTypes } = require("sequelize");
-
 const config = require("./config/config.json")["development"];
 
+// const sequelize = new Sequelize(`postgres://${process.env.USER}:${process.env.PASSWORD}@${process.env.HOST}:${process.env.PORT}/${process.env.DATABASE}`);
 const sequelize = new Sequelize(
   config.database,
   config.username,
@@ -12,10 +12,10 @@ const sequelize = new Sequelize(
   },
 );
 
-const Reservation = require("./models/reservation")(sequelize, DataTypes);
-const Room = require("./models/room")(sequelize, DataTypes);
-const Spot = require("./models/spot")(sequelize, DataTypes);
-const User = require("./models/user")(sequelize, DataTypes);
+const Reservation = require("./models/reservationModel")(sequelize, DataTypes);
+const Room = require("./models/roomModel")(sequelize, DataTypes);
+const Spot = require("./models/spotModel")(sequelize, DataTypes);
+const User = require("./models/userModel")(sequelize, DataTypes);
 
 module.exports = {
   Reservation,
